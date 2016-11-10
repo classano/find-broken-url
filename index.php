@@ -13,7 +13,7 @@ Text Domain: nfbu
 defined('ABSPATH') or die('No script kiddies please!');
 
 /**
- * När man aktiverar pluginet
+ * När man aktiverar pluginet.
  */
 function nfbu_activate() {
 	global $wpdb;
@@ -140,8 +140,8 @@ function nitea_find_broken_url_list(){
 	 * Output
 	 */
 	?>
-	<h1><?php echo __('Find broken url', 'nfbu'); ?></h1>
-	<a href="<?php echo get_admin_url(); ?>admin.php?page=nfbu&amp;broken-url=find" class="button button-primary button-large"><?php echo __('Find broken url', 'nfbu'); ?></a>
+	<h1><?php echo __('Find broken URL\'s', 'nfbu'); ?></h1>
+	<a href="<?php echo get_admin_url(); ?>admin.php?page=nfbu&amp;broken-url=find" class="button button-primary button-large"><?php echo __('Find broken URL\'s', 'nfbu'); ?></a>
 
 	<?php 
 	$nfbul = $wpdb->get_results('SELECT post_id, url, status FROM '.$wpdb->prefix.'nfbu_url');
@@ -195,7 +195,7 @@ function nitea_find_broken_url_list(){
 			</tbody>
 			<tbody>
 				<tr>
-					<td colspan="3"><?php echo __('No broken url found', 'nfbu'); ?></td>
+					<td colspan="3"><?php echo __('No broken URL\'s found', 'nfbu'); ?></td>
 				</tr>
 			</tbody>
 			<?php endif; ?>

@@ -56,21 +56,21 @@
 				)
 			'
 		);
-		// foreach($all_posts AS $r) {
-		// 	if(preg_match_all($reg_exUrl, $r->meta_value, $url)) {
-		// 		foreach($url[0] AS $k => $v) {
+		foreach($all_posts AS $r) {
+			if(preg_match_all($reg_exUrl, $r->meta_value, $url)) {
+				foreach($url[0] AS $k => $v) {
 					
-		// 			if((isset($ignore_list[$r->ID]) && in_array($v,$ignore_list[$r->ID]))) {
-		// 			}else{
-		// 				$status = $this->get_url_status($v);
-		// 				if($status != 200) {
-		// 					array_push($values, $r->post_id, $v, $status);
-		// 					$place_holders[] = '(%d, %s, %d)';
-		// 				}
-		// 			}
-		// 		}
-		// 	}
-		// }
+					if((isset($ignore_list[$r->ID]) && in_array($v,$ignore_list[$r->ID]))) {
+					}else{
+						$status = $this->get_url_status($v);
+						if($status != 200) {
+							array_push($values, $r->post_id, $v, $status);
+							$place_holders[] = '(%d, %s, %d)';
+						}
+					}
+				}
+			}
+		}
 
 		$all_posts_meta = $wpdb->get_results('SELECT wpm.post_id,wpm.meta_value FROM '.$wpdb->prefix.'postmeta wpm
 			LEFT JOIN wp_posts wp
@@ -103,7 +103,7 @@
 		/**
 		 * Ta bort alla eventuella länkar
 		 */
-		// $wpdb->query('DELETE FROM '.$wpdb->prefix.'nfbu_url WHERE nfbu_url_id > 0');
+		$wpdb->query('DELETE FROM '.$wpdb->prefix.'nfbu_url WHERE nfbu_url_id > 0');
 		/**
 		 * Lägg till alla felaktiga länkar
 		 */
