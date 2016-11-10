@@ -140,69 +140,72 @@ function nitea_find_broken_url_list(){
 	 * Output
 	 */
 	?>
-	<h1><?php echo __('Find broken URL\'s', 'nfbu'); ?></h1>
-	<a href="<?php echo get_admin_url(); ?>admin.php?page=nfbu&amp;broken-url=find" class="button button-primary button-large"><?php echo __('Find broken URL\'s', 'nfbu'); ?></a>
+	<div class="wrap">
+		<h1><?php echo __('Find broken URL\'s', 'nfbu'); ?> 
+			<a href="<?php echo get_admin_url(); ?>admin.php?page=nfbu&amp;broken-url=find" class="page-title-action"><?php echo __('Find broken URL\'s', 'nfbu'); ?></a>
+		</h1>
 
-	<?php 
-	$nfbul = $wpdb->get_results('SELECT post_id, url, status FROM '.$wpdb->prefix.'nfbu_url');
-	$nfbul_arr = array();
-	foreach($nfbul AS $k => $r) {
-		$nfbul_arr[$r->post_id][] = array(
-			'url' => $r->url,
-			'status' => $r->status
-		);
-	}
-	?>
-	<form method="post" action="<?php echo get_admin_url(); ?>admin.php?page=nfbu" target="_blank">
-		<table class="wp-list-table widefat striped">
-			<thead>
-				<tr>
-					<th><?php echo __('Page', 'nfbu'); ?></th>
-					<th><?php echo __('URL', 'nfbu'); ?></th>
-					<th><?php echo __('Status', 'nfbu'); ?></th>
-				</tr>
-			</thead>
-			<?php if(count($nfbul_arr) > 0) : ?>
-			<tfoot>
-				<tr>
-					<td colspan="3"><button type="submit" name="nfbu_bulk_ignore_submit" id="nfbu-bulk-ignore-submit" class="button button-primary button-large">Ignore selected</button></td>
-				</tr>
-			</tfoot>
-			<tbody>
-				<?php foreach($nfbul_arr AS $k => $r) : ?>
+		<?php 
+		$nfbul = $wpdb->get_results('SELECT post_id, url, status FROM '.$wpdb->prefix.'nfbu_url');
+		$nfbul_arr = array();
+		foreach($nfbul AS $k => $r) {
+			$nfbul_arr[$r->post_id][] = array(
+				'url' => $r->url,
+				'status' => $r->status
+			);
+		}
+		?>
+		<form method="post" action="<?php echo get_admin_url(); ?>admin.php?page=nfbu" target="_blank">
+			<table class="wp-list-table widefat striped">
+				<thead>
 					<tr>
-						<td colspan="3">
-							<a href="<?php echo get_admin_url(); ?>post.php?post=<?php echo $k; ?>&action=edit" target="_blank">
-								<strong><?php echo get_the_title($k); ?></strong>
-							</a>
-						</td>
+						<th><?php echo __('Page', 'nfbu'); ?></th>
+						<th><?php echo __('URL', 'nfbu'); ?></th>
+						<th><?php echo __('Status', 'nfbu'); ?></th>
 					</tr>
-					<?php foreach($r AS $k2 => $r2) : ?>
+				</thead>
+				<?php if(count($nfbul_arr) > 0) : ?>
+				<tfoot>
 					<tr>
-						<td>
-							<label>
-								<input type="checkbox" name="nfbu_ignore[<?php echo $k; ?>][]" value="<?php echo $r2['url']; ?>" />
-							</label>
-						</td>
-						<td>
-							<a href="<?php echo $r2['url']; ?>" target="_blank"><?php echo $r2['url']; ?></a>
-						</td>
-						<td><?php echo $r2['status']; ?></td>
+						<td colspan="3"><button type="submit" name="nfbu_bulk_ignore_submit" id="nfbu-bulk-ignore-submit" class="button button-primary button-large"><?php echo __('Ignore selected', 'nfbu'); ?></button></td>
 					</tr>
+				</tfoot>
+				<tbody>
+					<?php foreach($nfbul_arr AS $k => $r) : ?>
+						<tr>
+							<td colspan="3">
+								<a href="<?php echo get_admin_url(); ?>post.php?post=<?php echo $k; ?>&action=edit" target="_blank">
+									<strong><?php echo get_the_title($k); ?></strong>
+								</a>
+							</td>
+						</tr>
+						<?php foreach($r AS $k2 => $r2) : ?>
+						<tr>
+							<td>
+								<label>
+									<input type="checkbox" name="nfbu_ignore[<?php echo $k; ?>][]" value="<?php echo $r2['url']; ?>" />
+								</label>
+							</td>
+							<td>
+								<a href="<?php echo $r2['url']; ?>" target="_blank"><?php echo $r2['url']; ?></a>
+							</td>
+							<td><?php echo $r2['status']; ?></td>
+						</tr>
+						<?php endforeach; ?>
 					<?php endforeach; ?>
-				<?php endforeach; ?>
-			<?php else : ?>
-			</tbody>
-			<tbody>
-				<tr>
-					<td colspan="3"><?php echo __('No broken URL\'s found', 'nfbu'); ?></td>
-				</tr>
-			</tbody>
-			<?php endif; ?>
-		</table>
+				<?php else : ?>
+				</tbody>
+				<tbody>
+					<tr>
+						<td colspan="3"><?php echo __('No broken URL\'s found', 'nfbu'); ?></td>
+					</tr>
+				</tbody>
+				<?php endif; ?>
+			</table>
 
-		<em><?php echo __('Next check will be at', 'nfbu'); ?> <?php echo $next_check_datetime; ?> (<?php echo $server_datetime; ?>)</em>
-	</form>
+			<em><?php echo __('Next check will be at', 'nfbu'); ?> <?php echo $next_check_datetime; ?> (<?php echo $server_datetime; ?>)</em>
+		</form>
+	</div>
 <?php
 
 	// $cron_jobs = get_option( 'cron' );
