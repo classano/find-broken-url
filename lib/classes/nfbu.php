@@ -1,5 +1,5 @@
 <?php
-	class nfbu {
+class nfbu {
 	function __construct() {
 
 	}
@@ -112,7 +112,7 @@
 		);
 	}
 
-	public function get_url_status($url) {
+	private function get_url_status($url) {
 		/**
 		 * Hämta status för URL
 		 */
