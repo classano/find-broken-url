@@ -121,19 +121,36 @@ function nitea_find_broken_url_list(){
 	require_once 'lib/classes/nfbu.php';
 	$nfbu = new nfbu();
 
-	$date_default_timezone_get = date_default_timezone_get();
-	$timezone = 'Europe/Stockholm';
-	date_default_timezone_set($timezone);
-	$next_check_datetime 	= date('Y-m-d H:i:s', wp_next_scheduled('nfbu_schedule_cron'));
-	$server_datetime 		= date('Y-m-d H:i:s');
-	date_default_timezone_set($date_default_timezone_get);
+	/**
+	 * Hämta tidzon som användaren har valt
+	 */
+	$timezone = get_option('gmt_offset');
+
+	/**
+	 * Hämta tid när nästa gång cron ska köras och gör om det till datum med vald tidzon
+	 */
+	$next_check_time 		= wp_next_scheduled('nfbu_schedule_cron');
+	$next_check_datetime 	= gmdate("Y-m-d H:i:s", $next_check_time+3600*($timezone+date("I")));
+
+	/**
+	 * Hämta tiden just nu i vald tidzon
+	 */
+	$server_datetime 		= gmdate("Y-m-d H:i:s", time()+3600*($timezone+date("I")));
 
 	if(isset($_POST['nfbu_bulk_ignore_submit'])) {
-		$nfbu->bulk_ignore_submit($_POST['nfbu_ignore']);
+
+		if(isset($_POST['_wpnonce']) && wp_verify_nonce($_POST['_wpnonce'], 'nfbu_bulk-ignore-comment_'.get_current_user_id())) {
+
+			if(current_user_can('edit_posts')) {
+				$nfbu->bulk_ignore_submit($_POST['nfbu_ignore']);
+			}
+		}
 	}
 	
 	if(isset($_GET['broken-url']) && $_GET['broken-url'] == 'find') {
-		$nfbu->find_broken_url();
+		if(current_user_can('edit_posts')) {
+			$nfbu->find_broken_url();
+		}
 	}
 
 	/**
@@ -183,13 +200,13 @@ function nitea_find_broken_url_list(){
 						<tr>
 							<td>
 								<label>
-									<input type="checkbox" name="nfbu_ignore[<?php echo $k; ?>][]" value="<?php echo $r2['url']; ?>" />
+									<input type="checkbox" name="nfbu_ignore[<?php echo $k; ?>][]" value="<?php echo esc_url($r2['url']); ?>" />
 								</label>
 							</td>
 							<td>
-								<a href="<?php echo $r2['url']; ?>" target="_blank"><?php echo $r2['url']; ?></a>
+								<a href="<?php echo esc_url($r2['url']); ?>" target="_blank"><?php echo esc_url($r2['url']); ?></a>
 							</td>
-							<td><?php echo $r2['status']; ?></td>
+							<td><?php echo esc_html($r2['status']); ?></td>
 						</tr>
 						<?php endforeach; ?>
 					<?php endforeach; ?>
@@ -204,6 +221,8 @@ function nitea_find_broken_url_list(){
 			</table>
 
 			<em><?php echo __('Next check will be at', 'nfbu'); ?> <?php echo $next_check_datetime; ?> (<?php echo $server_datetime; ?>)</em>
+
+			<?php wp_nonce_field('nfbu_bulk-ignore-comment_'.get_current_user_id()); ?>
 		</form>
 	</div>
 <?php

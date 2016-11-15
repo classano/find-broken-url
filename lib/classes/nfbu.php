@@ -5,6 +5,7 @@ class nfbu {
 	}
 
 	public function bulk_ignore_submit($post) {
+		global $wpdb;
 		/**
 		 * Definiera varibler
 		 */
@@ -17,8 +18,12 @@ class nfbu {
 		if(is_array($post) && count($post > 0)) {
 			foreach($post as $post_id => $v) {
 				foreach($v AS $k => $url) {
-					array_push($values, $post_id, $url);
+					array_push($values, intval($post_id), preg_replace('/^(http(s)?)?:?\/*/u','http$2://',trim($url)));
 					$place_holders[] = '(%d, %s)';
+					
+					$wpdb->query(
+						$wpdb->prepare('DELETE FROM '.$wpdb->prefix.'nfbu_url WHERE url = %s AND post_id = %d',preg_replace('/^(http(s)?)?:?\/*/u','http$2://',trim($url)), intval($post_id))
+					);
 				}
 			}
 		}
@@ -64,7 +69,7 @@ class nfbu {
 					}else{
 						$status = $this->get_url_status($v);
 						if($status != 200) {
-							array_push($values, $r->post_id, $v, $status);
+							array_push($values, intval($r->post_id), preg_replace('/^(http(s)?)?:?\/*/u','http$2://',trim($v)), intval($status));
 							$place_holders[] = '(%d, %s, %d)';
 						}
 					}
@@ -82,7 +87,8 @@ class nfbu {
 				OR 
 				wpm.meta_value LIKE "%https://%"
 			)
-			ORDER BY meta_id DESC LIMIT 0,100'
+			ORDER BY meta_id 
+			-- DESC LIMIT 0,100'
 		);
 		foreach($all_posts_meta AS $r) {
 			if(preg_match_all($reg_exUrl, $r->meta_value, $url)) {
@@ -92,7 +98,7 @@ class nfbu {
 					}else{
 						$status = $this->get_url_status($v);
 						if($status != 200) {
-							array_push($values, $r->post_id, $v, $status);
+							array_push($values, intval($r->post_id), preg_replace('/^(http(s)?)?:?\/*/u','http$2://',trim($v)), intval($status));
 							$place_holders[] = '(%d, %s, %d)';
 						}
 					}
