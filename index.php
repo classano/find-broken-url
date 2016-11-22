@@ -5,7 +5,7 @@ Plugin URI: https://github.com/classano/find-broken-url
 Description: Find broken url in post and postmeta. On daily basis it checks for broken url. You can ignore broken url and hide them from the list.
 Author: Nitea AB (Claes Norén)
 Author URI: http://www.nitea.se
-Version: 1.0.0
+Version: 1.0.1
 License: GPLv2
 Text Domain: nfbu
 */

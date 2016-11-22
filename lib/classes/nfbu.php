@@ -78,7 +78,7 @@ class nfbu {
 		}
 
 		$all_posts_meta = $wpdb->get_results('SELECT wpm.post_id,wpm.meta_value FROM '.$wpdb->prefix.'postmeta wpm
-			LEFT JOIN wp_posts wp
+			LEFT JOIN '.$wpdb->prefix.'posts wp
 			ON wp.ID = wpm.post_id
 
 			WHERE wp.post_status = "publish" 
