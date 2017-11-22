@@ -2,7 +2,7 @@
 Donate link:
 Tags: links, link, broken links, url, broken url, find broken url, find broken links
 Requires at least: 4.1
-Tested up to: 4.6.1
+Tested up to: 4.9
 Stable tag: 1.0.1
 License: GPLv2
 Contributors: Classano
